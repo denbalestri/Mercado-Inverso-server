@@ -3,6 +3,8 @@ let rolsUserRoutes=require('./Endpoints/roluser')
 let rolsRoutes=require('./Endpoints/rols')
 let categoryRoutes=require('./Endpoints/category')
 let postsRoutes=require('./Endpoints/posts')
+let offerRoutes=require('./Endpoints/offer')
+let pickupzoneRoutes=require('./Endpoints/pickupzone')
 const express=require('express');
 const app=express();
 let bodyParser=require('body-parser')
@@ -23,5 +25,6 @@ app.use('/roluser',rolsUserRoutes);
 app.use('/rols',rolsRoutes);
 app.use('/category',categoryRoutes);
 app.use('/posts',postsRoutes)
-
+app.use('/offer',offerRoutes)
+app.use('/pickupzone',pickupzoneRoutes)
 app.listen(3001)

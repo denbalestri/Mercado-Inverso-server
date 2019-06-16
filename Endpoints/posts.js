@@ -12,6 +12,32 @@ routes.get('/',function(request,response){
         
     })
 })
+routes.post('/search',function(request,response){
+   console.log(request.body);
+    let search='';
+
+   if(request.body.categorySelected=='' && request.body.search!=''){
+    search={title:request.body.search}
+   }
+   else if(request.body.search=='' && request.body.categorySelected!=''){
+       search={category:request.body.categorySelected}
+   }
+   else{
+    search={title:request.body.search,category:request.body.categorySelected}
+   }
+  
+    model.findAll({
+        where:search     
+    }).then(data=>{
+        response.json(data);
+        //console.log(data)
+        
+    })
+
+
+
+
+})
 
 routes.post('/createPost',function(request,response){
     console.log(request.body)
@@ -22,7 +48,6 @@ routes.post('/createPost',function(request,response){
         description:request.body.description,
         price:request.body.price,
         quantity:request.body.quantity,
-        image:request.body.image,
         category:request.body.category,
         user_id:request.body.user_id
         
