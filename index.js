@@ -5,6 +5,7 @@ let categoryRoutes=require('./Endpoints/category')
 let postsRoutes=require('./Endpoints/posts')
 let offerRoutes=require('./Endpoints/offer')
 let pickupzoneRoutes=require('./Endpoints/pickupzone')
+let stateRoutes=require('./Endpoints/state')
 const express=require('express');
 const app=express();
 let bodyParser=require('body-parser')
@@ -27,4 +28,5 @@ app.use('/category',categoryRoutes);
 app.use('/posts',postsRoutes)
 app.use('/offer',offerRoutes)
 app.use('/pickupzone',pickupzoneRoutes)
+app.use('/state',stateRoutes)
 app.listen(3001)

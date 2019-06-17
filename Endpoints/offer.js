@@ -1,17 +1,61 @@
 const routes=require('express').Router();
 const model=require('../models/OfferModel')
+const stateModel=require('../models/StateModel')
+const pickupzoneModel=require('../models/PickupZoneModel')
+let {Sequelize,db} =require('./../db');
+routes.post('/',function(request,response){
+ console.log(request.body)
+
+model.hasMany(stateModel,{foreignKey: 'id',sourceKey: 'state'},)
+//stateModel.belongsTo(model, {foreignKey: 'state'})
+
+model.hasMany(pickupzoneModel, {foreignKey: 'id',sourceKey: 'pickupzone_id'})
 
 
-routes.get('/',function(request,response){
- 
     model.findAll({
+              where:{user_id:request.body.user_id},include: 
+              [{ model: stateModel, 
+                 as: 'states',
+                 required: true},
+                 { model: pickupzoneModel,
+                 as: 'pickupzones',
+                 required: true
+              }]
               
+
     }).then(data=>{
         response.json(data);
-       // console.log(data)
+       //console.log(data)
         
     })
 })
+
+routes.post('/postOffer',function(request,response){
+    console.log(request.body)
+   
+   model.hasMany(stateModel,{foreignKey: 'id',sourceKey: 'state'},)
+   //stateModel.belongsTo(model, {foreignKey: 'state'})
+   
+   model.hasMany(pickupzoneModel, {foreignKey: 'id',sourceKey: 'pickupzone_id'})
+   
+   
+       model.findAll({
+                 where:{post_id:request.body.post_id},include: 
+                 [{ model: stateModel, 
+                    as: 'states',
+                    required: true},
+                    { model: pickupzoneModel,
+                    as: 'pickupzones',
+                    required: true
+                 }]
+                 
+   
+       }).then(data=>{
+           response.json(data);
+          //console.log(data)
+           
+       })
+   })
 
 
 routes.post('/createOffer',function(request,response){

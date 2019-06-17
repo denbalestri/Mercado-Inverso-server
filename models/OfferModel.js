@@ -1,5 +1,5 @@
 let {Sequelize,db} =require('./../db');
-
+const stateModel=require('../models/StateModel')
 class Offer extends Sequelize.Model {}
 Offer.init({
   description: Sequelize.STRING,
@@ -18,4 +18,6 @@ Offer.init({
     primaryKey:true,
   }
 }, { sequelize:db, modelName: 'offer',underscored:true,freezeTableName: true,tableName:'offer',timestamps:true});
+
+
 module.exports=Offer;

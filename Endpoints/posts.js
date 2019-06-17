@@ -12,6 +12,17 @@ routes.get('/',function(request,response){
         
     })
 })
+routes.post('/OwnPost',function(request,response){
+ console.log(request.body)
+    model.findAll({
+             where:{user_id:request.body.user_id}
+    }).then(data=>{
+        response.json(data);
+       // console.log(data)
+        
+    })
+})
+
 routes.post('/search',function(request,response){
    console.log(request.body);
     let search='';
