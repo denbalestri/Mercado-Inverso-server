@@ -5,12 +5,13 @@ const postModel=require('../models/PostModel')
 const pickupzoneModel=require('../models/PickupZoneModel')
 const offerconfirmationModel=require('../models/offerconfirmationModel')
 let {Sequelize,db} =require('./../db');
+const Constants=require('../constants/statesOffer')
 
 routes.post('/',function(request,response){
- console.log(request.body)
+
 
 model.hasMany(stateModel,{foreignKey: 'id',sourceKey: 'state'},)
-//stateModel.belongsTo(model, {foreignKey: 'state'})
+
 
 model.hasMany(pickupzoneModel, {foreignKey: 'id',sourceKey: 'pickupzone_id'})
 
@@ -28,12 +29,13 @@ model.hasMany(pickupzoneModel, {foreignKey: 'id',sourceKey: 'pickupzone_id'})
 
     }).then(data=>{
         response.json(data);
-       //console.log(data)
+      
         
     })
 })
 
-routes.post('/postOffer',function(request,response){
+
+routes.post('/confirmed',function(request,response){
     console.log(request.body)
    
    model.hasMany(stateModel,{foreignKey: 'id',sourceKey: 'state'},)
@@ -41,12 +43,48 @@ routes.post('/postOffer',function(request,response){
    
    model.hasMany(pickupzoneModel, {foreignKey: 'id',sourceKey: 'pickupzone_id'})
    
-   
+   model.hasMany(postModel, {foreignKey: 'id',sourceKey: 'post_id'})
+
        model.findAll({
-                 where:{post_id:request.body.post_id},include: 
+                 where:{state:Constants.CONFIRMED},include: 
                  [{ model: stateModel, 
                     as: 'states',
                     required: true},
+                    { model: pickupzoneModel,
+                    as: 'pickupzones',
+                    required: true},
+                    {
+                        model: postModel,
+                        as: 'posts',
+                        required: true,
+                        where:{user_id:request.body.user_id} 
+                    }
+                 ]
+                 
+   
+       }).then(data=>{
+           response.json(data);
+         
+           
+       })
+   })
+
+routes.post('/postOffer',function(request,response){
+
+   
+   model.hasMany(stateModel,{foreignKey: 'id',sourceKey: 'state'},)
+
+   
+   model.hasMany(pickupzoneModel, {foreignKey: 'id',sourceKey: 'pickupzone_id'})
+   
+   
+       model.findAll({
+                 where:{post_id:request.body.post_id,state:Constants.PENDING},include: 
+                 [{ model: stateModel, 
+                    as: 'states',
+                    required: true,
+                   
+                },
                     { model: pickupzoneModel,
                     as: 'pickupzones',
                     required: true
@@ -62,7 +100,7 @@ routes.post('/postOffer',function(request,response){
 
 
 routes.post('/createOffer',function(request,response){
-    console.log(request.body)
+  
   
 
     model.create({
@@ -76,7 +114,7 @@ routes.post('/createOffer',function(request,response){
        
     })
     .then(data=>{
-        console.log(data);
+     
         response.status(200);
         response.json(data.get({plain: true}));
         
@@ -84,7 +122,7 @@ routes.post('/createOffer',function(request,response){
 
     }).catch(error=>{
         response.send(error)
-        console.log(error)
+      
     })  
         
 
@@ -94,25 +132,25 @@ routes.post('/createOffer',function(request,response){
 routes.post('/confirm',function(request,response){
    
        model.update({
-           state:request.body.state
+           state:Constants.CONFIRMED
        },{
                 where:{id:request.body.offer_id}
        }).then(data=>{
            //response.json(data);
-            //console.log(data)
+            console.log(data)
         model.findOne({
             where:{id:request.body.post_id}
         }).then(data=>{
             
             offerconfirmationModel.create({
                 post_id:request.body.post_id,
-               supplier_id:request.body.user_id,
-               trader_id:data.user_id,
-                cancelled:0
+               supplier_id:data.user_id,
+               trader_id:request.body.user_id,
+                cancelled:Constants.NOCANCELLED
                
             })
             .then(data=>{
-                console.log(data);
+                
                 response.status(200);
                 response.json(data.get({plain: true}));
                 
@@ -120,12 +158,48 @@ routes.post('/confirm',function(request,response){
         
             }).catch(error=>{
                 response.send(error)
-                console.log(error)
+               
             })  
         })
            
        })
    })
+
+   routes.post('/cancel',function(request,response){
+ 
+    model.update({
+        state:Constants.CANCELLED
+    },{
+             where:{id:request.body.offer_id}
+    }).then(data=>{
+        //response.json(data);
+         //console.log(data)
+     model.findOne({
+         where:{id:request.body.offer_id}
+     })
+     
+     .then(data=>{
+        
+         offerconfirmationModel.update({
+             cancelled:Constants.CANCELLED},{
+            where:{post_id:data.post_id}
+             }
+         )
+         .then(data=>{
+           
+             response.status(200);
+             response.json(data.get({plain: true}));
+             
+     
+     
+         }).catch(error=>{
+             response.send(error)
+           
+         })  
+     })
+        
+    })
+})
 
 
 

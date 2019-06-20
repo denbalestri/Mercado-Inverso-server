@@ -1,2 +1,6 @@
-export const CANCELLED=1;
-export const NOCANCELLED=0;
+module.exports = {
+    CANCELLED:2,
+    CONFIRMED:3,
+    NOCANCELLED:0,
+    PENDING:1
+}
