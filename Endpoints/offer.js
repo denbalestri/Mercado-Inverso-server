@@ -36,7 +36,7 @@ model.hasMany(pickupzoneModel, {foreignKey: 'id',sourceKey: 'pickupzone_id'})
 
 
 routes.post('/confirmed',function(request,response){
-    console.log(request.body)
+    
    
    model.hasMany(stateModel,{foreignKey: 'id',sourceKey: 'state'},)
    //stateModel.belongsTo(model, {foreignKey: 'state'})
@@ -136,8 +136,7 @@ routes.post('/confirm',function(request,response){
        },{
                 where:{id:request.body.offer_id}
        }).then(data=>{
-           //response.json(data);
-            console.log(data)
+           
         model.findOne({
             where:{id:request.body.post_id}
         }).then(data=>{

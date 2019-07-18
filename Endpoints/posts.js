@@ -5,7 +5,7 @@ const model=require('../models/PostModel')
 routes.get('/',function(request,response){
  
     model.findAll({
-              
+        order:[['id','DESC']]
     }).then(data=>{
         response.json(data);
        // console.log(data)
@@ -13,9 +13,10 @@ routes.get('/',function(request,response){
     })
 })
 routes.post('/OwnPost',function(request,response){
- console.log(request.body)
+
     model.findAll({
-             where:{user_id:request.body.user_id}
+             where:{user_id:request.body.user_id},
+             order:[['id','DESC']]
     }).then(data=>{
         response.json(data);
        // console.log(data)
@@ -24,7 +25,7 @@ routes.post('/OwnPost',function(request,response){
 })
 
 routes.post('/search',function(request,response){
-   console.log(request.body);
+   
     let search='';
 
    if(request.body.categorySelected=='' && request.body.search!=''){
@@ -38,7 +39,8 @@ routes.post('/search',function(request,response){
    }
   
     model.findAll({
-        where:search     
+        where:search,
+        order:[['id','DESC']]  
     }).then(data=>{
         response.json(data);
         //console.log(data)
@@ -51,7 +53,7 @@ routes.post('/search',function(request,response){
 })
 
 routes.post('/createPost',function(request,response){
-    console.log(request.body)
+    
    
 
     model.create({
